@@ -1,32 +1,51 @@
-import React from "react";
+import axios from "./axios";
+import React, { useEffect, useState } from "react";
 import "./Banner.css";
+import requests from "./Requests";
 
 const Banner = () => {
-    const truncate = (string, n) =>{
-        return string?.length > n ? string.substr(0, n-1) + '...': string;
+  const [movie, setMovie] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const request = await axios.get(requests.fetchNetflixOriginals);
+      setMovie(
+        request.data.results[
+          Math.floor(Math.random() * request.data.results.length - 1)
+        ]
+      );
+      return request;
     }
+
+    fetchData();
+  }, []);
+  console.log(movie);
+
+  const truncate = (string, n) => {
+    return string?.length > n ? string.substr(0, n - 1) + "..." : string;
+  };
   return (
     <header
       className="banner"
       style={{
         backgroundSize: "cover",
-        backgroundImage: `url("https://wallpapercave.com/wp/wp8741529.jpg")`,
+        backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie?.backdrop_path}")`,
         backgroundPosition: "center center",
       }}
     >
       <div className="banner__contents">
-        <h1 className="banner__title">Movie Name</h1>
+        <h1 className="banner__title">
+          {movie?.title || movie?.name || movie?.original_name}
+        </h1>
         <div className="banner__buttons">
           <button className="banner__button">Play</button>
           <button className="banner__button">My list</button>
         </div>
         <h1 className="banner__description">
-            {
-                truncate(`Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos tempore nisi, blanditiis neque vel, optio aperiam, laboriosam adipisci officiis amet molestiae officia deserunt tempora eaque. Quia, facilis eum dolorum ullam obcaecati eius quod in? Odio sequi doloremque expedita veniam impedit, corrupti debitis ullam molestiae quibusdam maiores reprehenderit ad aliquam ipsa quisquam, sit mollitia, suscipit error. Nihil quas quod reiciendis corporis officia eos enim hic molestiae mollitia voluptas. Ipsam repellat, quo voluptatem, ullam consequuntur dolorum vitae impedit asperiores ducimus quidem perferendis expedita nesciunt quasi repudiandae totam ad minima et, hic maxime itaque ab in quam! Labore, nobis tempore. Doloribus repudiandae inventore culpa perspiciatis aliquid nam asperiores veritatis quasi`, 150)
-            }
+          {truncate(movie?.overview, 200)}
         </h1>
       </div>
-      <div className="banner__fadeBottom"/>
+      <div className="banner--fadeBottom" />
     </header>
   );
 };
