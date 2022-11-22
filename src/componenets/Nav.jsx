@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useHistory } from "react";
 import "./Nav.css";
 import Avatar from "../assets/avatar.png";
 import Logo from "../assets/N logo.png"
 
+
 const Nav = () => {
     const [show, handleShow] = useState(false);
+
+    const history = useHistory();
 
     const transitionNavBar = () =>{
         if(window.scrollY > 100){
@@ -25,12 +28,13 @@ const Nav = () => {
     <div className={`nav ${show &&'nav_black'}`}>
       <div className="nav__contents">
         <img
+        onClick={() => history.push("/")}
           className="nav_logo"
           src={Logo}
           alt="logo"
         />
 
-        <img className="nav_avatar" src={Avatar} alt="avatar" />
+        <img onClick={() => history.push("/profile")} className="nav_avatar" src={Avatar} alt="avatar" />
       </div>
     </div>
   );
